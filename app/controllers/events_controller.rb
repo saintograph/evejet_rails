@@ -1,20 +1,85 @@
 class EventsController < ApplicationController
+  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :event_owner, only: [:edit, :update, :destroy]
+  before_filter :authenticate_user!
+  # GET /events
+  # GET /events.json
   def index
-    @events = Event.all
+    @events = Event.all.to_a
   end
 
+  # GET /events/1
+  # GET /events/1.json
+  def show
+    test1 = Event.find(params["id"])
+    @test = test1.title
+  end
+
+  # GET /events/new
   def new
+    @event = Event.new
   end
 
-  def create
-  end
-
+  # GET /events/1/edit
   def edit
   end
 
-  def update
+  # POST /events
+  # POST /events.json
+  def create
+    # @event = Event.new(event_params)
+    @event = current_user.organized_events.new(event_params)
+
+    respond_to do |format|
+      if @event.save
+        format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        format.json { render :show, status: :created, location: @event }
+      else
+        format.html { render :new }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
-  def destroy
+  # PATCH/PUT /events/1
+  # PATCH/PUT /events/1.json
+  def update
+    respond_to do |format|
+      if @event.update(event_params)
+        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+        format.json { render :show, status: :ok, location: @event }
+      else
+        format.html { render :edit }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
   end
+
+  # DELETE /events/1
+  # DELETE /events/1.json
+  def destroy
+    @event.destroy
+    respond_to do |format|
+      format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    def event_owner
+      if @event.organizer_id != current_user.id
+        redirect_to events_path
+        flash[:notice] = "You are not authorised"
+      end
+    end
+    
+    # Use callbacks to share common setup or constraints between actions.
+    def set_event
+      @event = Event.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def event_params
+      params.fetch(:event, {})
+    end
 end
