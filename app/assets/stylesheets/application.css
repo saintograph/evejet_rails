@@ -12,4 +12,30 @@
  *
  *= require_tree .
  *= require_self
+ *= require normalize.min
+ *= require flexboxgrid.min
+ *= require semantic.min
  */
+
+.main-container {
+    background-image: url(bg_01.jpg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+ }
+
+ .login-button {
+     margin: 15px;
+ }
+
+ .cards-csbg {
+     background-color: #ffffff;
+     color: #ffffff;
+     min-width: 60vh;
+     margin-top: 30vh;
+     min-height: 60vh;
+     padding-top: 50px;
+     border-radius: 10px;
+ }
