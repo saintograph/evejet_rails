@@ -11,7 +11,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-    test1 = Event.find(params["id"])
+    test1 = Event.find(params['id'])
     @test = test1.title
   end
 
@@ -21,8 +21,7 @@ class EventsController < ApplicationController
   end
 
   # GET /events/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /events
   # POST /events.json
@@ -66,20 +65,20 @@ class EventsController < ApplicationController
   end
 
   private
-    def event_owner
-      if @event.organizer_id != current_user.id
-        redirect_to events_path
-        flash[:notice] = "You are not authorised"
-      end
-    end
-    
-    # Use callbacks to share common setup or constraints between actions.
-    def set_event
-      @event = Event.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def event_params
-      params.fetch(:event, {})
-    end
+  def event_owner
+    return unless @event.organizer_id != current_user.id
+    redirect_to events_path
+    flash[:notice] = 'You are not authorised'
+  end
+  
+  # Use callbacks to share common setup or constraints between actions.
+  def set_event
+    @event = Event.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def event_params
+    params.fetch(:event, {})
+  end
 end
